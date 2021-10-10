@@ -26,3 +26,9 @@ from matplotlib import pyplot as plt
 import numpy as np
 import pandas as pd
 ```
+
+```python
+### Download reference sequences
+
+!wget https://hgdownload.soe.ucsc.edu/goldenPath/hg38/bigZips/hg38.fa.align.gz
+```

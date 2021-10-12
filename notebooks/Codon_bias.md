@@ -32,3 +32,13 @@ import pandas as pd
 
 !wget https://hgdownload.soe.ucsc.edu/goldenPath/hg38/bigZips/hg38.fa.align.gz
 ```
+
+```python
+### Calculate codon stats
+
+from Bio.SeqUtils import CodonUsage
+
+usage_tab = CodonUsage.CodonAdaptationIndex
+usage_tab.generate_index("hg38.fa.align.gz")
+usage_tab.print_index()
+```

@@ -31,6 +31,7 @@ import pandas as pd
 ### Download reference sequences
 
 !wget https://hgdownload.soe.ucsc.edu/goldenPath/hg38/bigZips/hg38.fa.align.gz
+!gunzip hg38.fa.align.gz
 ```
 
 ```python
@@ -39,6 +40,6 @@ import pandas as pd
 from Bio.SeqUtils import CodonUsage
 
 usage_tab = CodonUsage.CodonAdaptationIndex
-usage_tab.generate_index("hg38.fa.align.gz")
+usage_tab.generate_index("hg38.fa.align")
 usage_tab.print_index()
 ```

@@ -14,6 +14,10 @@ RUN pip3 install jupytext && \
 RUN install2.r --error \
     --deps TRUE \
     devtools \
+    plotly \
+    heatmaply \
+    RColorBrewer \
+    ggsci \
     readxl
 
 RUN chmod a+rwx -R /home/rstudio

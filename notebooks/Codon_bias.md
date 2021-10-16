@@ -13,8 +13,7 @@ jupyter:
     name: python3
 ---
 
-# Draft a function drawing faceted subnetworks
-
+# Create codon usage table from a reference
 
 ## Dependencies
 

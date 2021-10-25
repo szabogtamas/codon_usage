@@ -42,3 +42,11 @@ usage_tab = CodonUsage.CodonAdaptationIndex
 usage_tab.generate_index("hg38.fa.align")
 usage_tab.print_index()
 ```
+
+```python
+### Show frequency of a given codon
+
+CODON = "TTT"
+
+print(usage_tab[CODON])
+```

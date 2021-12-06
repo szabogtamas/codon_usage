@@ -1,0 +1,31 @@
+---
+title: "`r params$report_title`"
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+    theme: united
+    code_folding: hide
+params:
+  report_title: "Parsing CDS sequences from a genome"
+  report_author: "Tamas Szabo"
+  report_time: !r format(Sys.Date(), format="%d/%m/%Y")
+  species: "human"
+  data_folder: "../data"
+---
+
+## Setup
+
+```{r message = FALSE, warning = FALSE}
+# Import tools to be used
+
+library(dplyr)
+library(GenomicFeatures)
+
+select <- dplyr::select
+filter <- dplyr::filter
+```
+
+```{r message = FALSE, warning = FALSE}
+extractTranscriptSeqs(x, transcripts)
+```

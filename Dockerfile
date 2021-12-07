@@ -1,8 +1,13 @@
 FROM szabogtamas/jupy_rocker
 
 RUN sudo apt-get update -y && \
+    sudo apt-get install -y libxml2-dev && \
     sudo apt-get install -y libxt-dev && \
-    sudo apt-get install -y libx11-dev
+    sudo apt-get install -y libx11-dev && \
+    sudo apt-get install -y libz-dev && \
+    sudo apt-get install -y zlib1g-dev && \
+    sudo apt-get install -y libglpk-dev && \
+    sudo apt-get install -y libcairo2-dev
 
 RUN pip3 install jupytext && \
     pip3 install numpy && \
@@ -18,7 +23,10 @@ RUN install2.r --error \
     heatmaply \
     RColorBrewer \
     ggsci \
+    ggridges \
     readxl
+
+RUN R -e "BiocManager::install('clusterProfiler')"
 
 RUN chmod a+rwx -R /home/rstudio
 

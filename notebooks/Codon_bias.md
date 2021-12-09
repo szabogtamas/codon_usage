@@ -22,28 +22,58 @@ jupyter:
 import matplotlib
 from matplotlib import pyplot as plt
 
+from Bio import SeqIO
+
 import numpy as np
 import pandas as pd
 ```
 
 ```python
-from Bio import SeqIO
-```
+### Download reference sequences from UCSC
 
-```python
-### Download reference sequences
-
-#https://ftp.ncbi.nlm.nih.gov/refseq/H_sapiens/annotation/GRCh38_latest/refseq_identifiers/GRCh38_latest_genomic.gff.gz
-#https://ftp.ncbi.nlm.nih.gov/refseq/H_sapiens/annotation/GRCh38_latest/refseq_identifiers/GRCh38_latest_rna.fna.gz
 !wget https://hgdownload.soe.ucsc.edu/goldenPath/hg38/bigZips/hg38.fa.align.gz
 !gunzip hg38.fa.align.gz
 ```
 
 ```python
+### Download reference sequences from NCBI
+
+!wget https://ftp.ncbi.nlm.nih.gov/refseq/H_sapiens/annotation/GRCh38_latest/refseq_identifiers/GRCh38_latest_rna.fna
+!gunzip GRCh38_latest_rna.fna.gz
+```
+
+```python
+### Download annotation for sequences
+
+!wget https://ftp.ncbi.nlm.nih.gov/refseq/H_sapiens/annotation/GRCh38_latest/refseq_identifiers/GRCh38_latest_genomic.gff.gz
+!gunzip GRCh38_latest_genomic.gff.gz
+```
+
+```python
+annotation = pd.read_csv("GRCh38_latest_genomic.gff", sep = "\t", skiprows=11, header=None, index_col=None)
+annotation.head()
+```
+
+```python
+annotation.loc[annotation[2] == "CDS",:].head()
+```
+
+```python
 for seq_record in SeqIO.parse("GRCh38_latest_rna.fna", "fasta"):
     print(seq_record.id)
+    print(seq_record.translate())
     print(repr(seq_record.seq))
     break
+```
+
+```python
+for seq_record in SeqIO.parse("GRCh38_latest_rna.fna", "fasta"):
+    if seq_record.description.find("CDS") > 1:
+        print(seq_record.id)
+        print(repr(seq_record.seq))
+        print(seq_record.description)
+        print(dir(seq_record))
+        break
 ```
 
 ```python

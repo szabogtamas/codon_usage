@@ -24,6 +24,7 @@ RUN install2.r --error \
     RColorBrewer \
     ggsci \
     ggridges \
+    pheatmap \
     readxl
 
 RUN R -e "BiocManager::install('clusterProfiler')"

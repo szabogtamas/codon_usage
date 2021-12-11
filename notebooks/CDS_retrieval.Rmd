@@ -26,6 +26,25 @@ select <- dplyr::select
 filter <- dplyr::filter
 ```
 
+```{r}
+library(EnsDb.Hsapiens.v86)
+library(EnsDb.Mmusculus.v79)
+library(BSgenome.Drerio.UCSC.danRer10)
+library(BSgenome.Dmelanogaster.UCSC.dm6)
+
+hsdb <- EnsDb.Hsapiens.v86
+mmdb <- EnsDb.Mmusculus.v79
+drdb <- BSgenome.Drerio.UCSC.danRer10
+dmdb <- BSgenome.Dmelanogaster.UCSC.dm6
+
+hub_dir <- "/home/rstudio/data/TwoBit"
+if(!dir.exists(hub_dir)) dir.create(hub_dir, recursive=TRUE)
+AnnotationHub::setAnnotationHubOption("CACHE", hub_dir)
+hs_dna <- ensembldb:::getGenomeTwoBitFile(hsdb)
+mm_dna <- ensembldb:::getGenomeTwoBitFile(mmdb)
+```
+
+
 ```{r message = FALSE, warning = FALSE}
 extractTranscriptSeqs(x, transcripts)
 ```

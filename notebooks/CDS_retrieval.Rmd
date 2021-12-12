@@ -34,8 +34,8 @@ library(TxDb.Hsapiens.UCSC.hg19.knownGene)
 library(BSgenome.Mmusculus.UCSC.mm10)
 library(TxDb.Mmusculus.UCSC.mm10.knownGene)
 library(BSgenome.Drerio.UCSC.danRer10)
-library(BSgenome.Dmelanogaster.UCSC.dm6)
 library(TxDb.Drerio.UCSC.danRer10.refGene)
+library(BSgenome.Dmelanogaster.UCSC.dm6)
 library(TxDb.Dmelanogaster.UCSC.dm6.ensGene)
 library(BSgenome.Scerevisiae.UCSC.sacCer3)
 library(TxDb.Scerevisiae.UCSC.sacCer3.sgdGene)
@@ -49,6 +49,42 @@ if(!dir.exists(params$fasta_folder)) dir.create(params$fasta_folder, recursive=T
 
 ## Whole genome CDSs
 
+## Homo sapiens
+
+```{r message = FALSE, warning = FALSE}
+tx_set <- TxDb.Hsapiens.UCSC.hg19.knownGene
+genome_seqs <- BSgenome.Hsapiens.UCSC.hg19
+
+cdsBy(tx_set, "tx") %>%
+  extractTranscriptSeqs(genome_seqs, .) %>%
+  RNAStringSet() %>%
+  writeXStringSet(file.path(params$fasta_folder, "human_cds.fa"))
+```
+
+## Mus musculus
+
+```{r message = FALSE, warning = FALSE}
+tx_set <- TxDb.Mmusculus.UCSC.mm10.knownGene
+genome_seqs <- BSgenome.Mmusculus.UCSC.mm10
+
+cdsBy(tx_set, "tx") %>%
+  extractTranscriptSeqs(genome_seqs, .) %>%
+  RNAStringSet() %>%
+  writeXStringSet(file.path(params$fasta_folder, "mouse_cds.fa"))
+```
+
+## Danio rerio
+
+```{r message = FALSE, warning = FALSE}
+tx_set <- TxDb.Drerio.UCSC.danRer10.refGene
+genome_seqs <- BSgenome.Drerio.UCSC.danRer10
+
+cdsBy(tx_set, "tx") %>%
+  extractTranscriptSeqs(genome_seqs, .) %>%
+  RNAStringSet() %>%
+  writeXStringSet(file.path(params$fasta_folder, "zebrafish_cds.fa"))
+```
+
 ## Drosophila melanogaster
 
 ```{r message = FALSE, warning = FALSE}
@@ -59,5 +95,17 @@ cdsBy(tx_set, "tx") %>%
   extractTranscriptSeqs(genome_seqs, .) %>%
   RNAStringSet() %>%
   writeXStringSet(file.path(params$fasta_folder, "drosophila_cds.fa"))
+```
+
+## Yeast
+
+```{r message = FALSE, warning = FALSE}
+tx_set <- TxDb.Scerevisiae.UCSC.sacCer3.sgdGene
+genome_seqs <- BSgenome.Scerevisiae.UCSC.sacCer3
+
+cdsBy(tx_set, "tx") %>%
+  extractTranscriptSeqs(genome_seqs, .) %>%
+  RNAStringSet() %>%
+  writeXStringSet(file.path(params$fasta_folder, "yeast_cds.fa"))
 ```
 

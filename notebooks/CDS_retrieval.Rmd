@@ -25,33 +25,31 @@ library(GenomicFeatures)
 select <- dplyr::select
 filter <- dplyr::filter
 ```
-```{r}
-if(!dir.exists(params$fasta_folder)) dir.create(params$fasta_folder, recursive=TRUE)
-```
 
 ```{r}
-BiocManager::install('TxDb.Dmelanogaster.UCSC.dm6.ensGene')
-BiocManager::install('TxDb.Drerio.UCSC.danRer10.refGene')
-```
+# Genomes and annotations for model organisms
 
-
-```{r}
-library(EnsDb.Hsapiens.v86)
-library(EnsDb.Mmusculus.v79)
+library(BSgenome.Hsapiens.UCSC.hg19)
+library(TxDb.Hsapiens.UCSC.hg19.knownGene)
+library(BSgenome.Mmusculus.UCSC.mm10)
+library(TxDb.Mmusculus.UCSC.mm10.knownGene)
 library(BSgenome.Drerio.UCSC.danRer10)
 library(BSgenome.Dmelanogaster.UCSC.dm6)
 library(TxDb.Drerio.UCSC.danRer10.refGene)
 library(TxDb.Dmelanogaster.UCSC.dm6.ensGene)
-
-hsdb <- EnsDb.Hsapiens.v86
-mmdb <- EnsDb.Mmusculus.v79
-drdb <- BSgenome.Drerio.UCSC.danRer10
-dmdb <- BSgenome.Dmelanogaster.UCSC.dm6
-
-hs_dna <- ensembldb:::getGenomeTwoBitFile(hsdb)
-mm_dna <- ensembldb:::getGenomeTwoBitFile(mmdb)
+library(BSgenome.Scerevisiae.UCSC.sacCer3)
+library(TxDb.Scerevisiae.UCSC.sacCer3.sgdGene)
 ```
 
+```{r}
+# Create output folder if it does not exist
+
+if(!dir.exists(params$fasta_folder)) dir.create(params$fasta_folder, recursive=TRUE)
+```
+
+## Whole genome CDSs
+
+## Drosophila melanogaster
 
 ```{r message = FALSE, warning = FALSE}
 tx_set <- TxDb.Dmelanogaster.UCSC.dm6.ensGene

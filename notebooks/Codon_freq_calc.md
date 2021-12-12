@@ -60,7 +60,7 @@ cft.head()
 ```
 
 ```python
-cft.to_csv(freq_dir + "/test_freqs.csv")
+cft.reset_index().to_csv(freq_dir + "/test_freqs.csv", index=False)
 ```
 
 ```python

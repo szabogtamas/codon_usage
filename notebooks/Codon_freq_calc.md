@@ -41,7 +41,10 @@ def codon_freq_of_cds(seq, proto_d={"".join(x): 0 for x in itertools.product("CU
     for i in range(0, len(seq), 3):
         c += 1
         codon = str(seq[i:i+3])
-        d[codon] += 1
+        try:
+            d[codon] += 1
+        except:
+            pass
     d["SUM"] = c
     return d
 ```

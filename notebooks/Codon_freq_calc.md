@@ -24,7 +24,7 @@ from Bio import SeqIO
 import numpy as np
 import pandas as pd
 
-import os
+import os, itertools
 ```
 
 ```python
@@ -33,17 +33,46 @@ genome_dir = "../fasta_transcriptomes"
 
 ```python
 def create_codonfeq_table(transcriptome):
+    frqs = dict()
+    proto_d = {"".join(x): 0 for x in itertools.product("CUAG", repeat=3)}
+    proto_d["SUM"] = 0
     for seq_record in SeqIO.parse(transcriptome, "fasta"):
-        print(seq_record.id)
-        print(seq_record.translate())
-        print(repr(seq_record.seq))
-        break
+        d = proto_d.copy()
+        seq = seq_record.seq.reverse_complement()
+        c = 0
+        for i in range(0, len(seq), 3):
+            c += 1
+            codon = str(seq[i:i+3])
+            d[codon] += 1
+        d["SUM"] = c
+        frqs[seq_record.id] = d
+        return pd.DataFrame.from_dict(frqs, orient="index")
+    return frqs
 
 cft = create_codonfeq_table(genome_dir + "/" + os.listdir(genome_dir)[0])
+cft.head()
 ```
 
 ```python
+s = "asdfagasgdadsha"
+len(s)
+```
 
+```python
+s[::3]
+```
+
+```python
+list(itertools.islice(s, 0, 2, 3))
+```
+
+```python
+dir(itertools)
+```
+
+```python
+for i in range(0, len(s), 3):
+    print(s[i:i+3])
 ```
 
 ```python

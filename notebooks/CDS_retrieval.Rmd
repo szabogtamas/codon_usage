@@ -61,7 +61,13 @@ dna <- extractTranscriptSeqs(mmdb, cdsByTx)
 drosi_cds <- cdsBy(TxDb.Dmelanogaster.UCSC.dm6.ensGene, "tx")
 ```
 
+```{r}
+drosi_dna_seqs  <- extractTranscriptSeqs(BSgenome.Dmelanogaster.UCSC.dm6, drosi_cds)
+drosi_rna_seqs  <- reverseComplement(drosi_dna_seqs)
+drosi_rna_seqs  <- RNAStringSet(drosi_rna_seqs)
+```
 
 ```{r}
-dna <- extractTranscriptSeqs(BSgenome.Dmelanogaster.UCSC.dm6, drosi_cds)
+
 ```
+

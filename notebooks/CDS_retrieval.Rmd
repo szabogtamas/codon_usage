@@ -25,26 +25,43 @@ library(GenomicFeatures)
 select <- dplyr::select
 filter <- dplyr::filter
 ```
+```{r}
+BiocManager::install('TxDb.Dmelanogaster.UCSC.dm6.ensGene')
+BiocManager::install('TxDb.Drerio.UCSC.danRer10.refGene')
+```
+
 
 ```{r}
 library(EnsDb.Hsapiens.v86)
 library(EnsDb.Mmusculus.v79)
 library(BSgenome.Drerio.UCSC.danRer10)
 library(BSgenome.Dmelanogaster.UCSC.dm6)
+library(TxDb.Drerio.UCSC.danRer10.refGene)
+library(TxDb.Dmelanogaster.UCSC.dm6.ensGene)
 
 hsdb <- EnsDb.Hsapiens.v86
 mmdb <- EnsDb.Mmusculus.v79
 drdb <- BSgenome.Drerio.UCSC.danRer10
 dmdb <- BSgenome.Dmelanogaster.UCSC.dm6
 
-hub_dir <- "/home/rstudio/data/TwoBit"
-if(!dir.exists(hub_dir)) dir.create(hub_dir, recursive=TRUE)
-AnnotationHub::setAnnotationHubOption("CACHE", hub_dir)
 hs_dna <- ensembldb:::getGenomeTwoBitFile(hsdb)
 mm_dna <- ensembldb:::getGenomeTwoBitFile(mmdb)
 ```
 
 
 ```{r message = FALSE, warning = FALSE}
-extractTranscriptSeqs(x, transcripts)
+cdsByTx <- cdsBy(mmdb, "tx")
+```
+
+```{r}
+dna <- extractTranscriptSeqs(mmdb, cdsByTx)
+```
+
+```{r}
+drosi_cds <- cdsBy(TxDb.Dmelanogaster.UCSC.dm6.ensGene, "tx")
+```
+
+
+```{r}
+dna <- extractTranscriptSeqs(BSgenome.Dmelanogaster.UCSC.dm6, drosi_cds)
 ```

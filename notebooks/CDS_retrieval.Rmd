@@ -54,25 +54,12 @@ mm_dna <- ensembldb:::getGenomeTwoBitFile(mmdb)
 
 
 ```{r message = FALSE, warning = FALSE}
-cdsByTx <- cdsBy(mmdb, "tx")
-```
+tx_set <- TxDb.Dmelanogaster.UCSC.dm6.ensGene
+genome_seqs <- BSgenome.Dmelanogaster.UCSC.dm6
 
-```{r}
-dna <- extractTranscriptSeqs(mmdb, cdsByTx)
-```
-
-```{r}
-drosi_cds <- cdsBy(TxDb.Dmelanogaster.UCSC.dm6.ensGene, "tx")
-```
-
-```{r}
-drosi_dna_seqs  <- extractTranscriptSeqs(BSgenome.Dmelanogaster.UCSC.dm6, drosi_cds)
-#drosi_rna_seqs  <- reverseComplement(drosi_dna_seqs)
-drosi_rna_seqs  <- RNAStringSet(drosi_dna_seqs)
-head(drosi_rna_seqs)
-```
-
-```{r}
-writeXStringSet(drosi_rna_seqs, file.path(params$fasta_folder, "drosophila_cds.fa"))
+cdsBy(tx_set, "tx") %>%
+  extractTranscriptSeqs(genome_seqs, .) %>%
+  RNAStringSet() %>%
+  writeXStringSet(file.path(params$fasta_folder, "drosophila_cds.fa"))
 ```
 

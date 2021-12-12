@@ -11,7 +11,7 @@ params:
   report_author: "Tamas Szabo"
   report_time: !r format(Sys.Date(), format="%d/%m/%Y")
   species: "human"
-  data_folder: "../data"
+  fasta_folder: "../fasta_transcriptomes"
 ---
 
 ## Setup
@@ -25,6 +25,10 @@ library(GenomicFeatures)
 select <- dplyr::select
 filter <- dplyr::filter
 ```
+```{r}
+if(!dir.exists(params$fasta_folder)) dir.create(params$fasta_folder, recursive=TRUE)
+```
+
 ```{r}
 BiocManager::install('TxDb.Dmelanogaster.UCSC.dm6.ensGene')
 BiocManager::install('TxDb.Drerio.UCSC.danRer10.refGene')
@@ -63,11 +67,12 @@ drosi_cds <- cdsBy(TxDb.Dmelanogaster.UCSC.dm6.ensGene, "tx")
 
 ```{r}
 drosi_dna_seqs  <- extractTranscriptSeqs(BSgenome.Dmelanogaster.UCSC.dm6, drosi_cds)
-drosi_rna_seqs  <- reverseComplement(drosi_dna_seqs)
-drosi_rna_seqs  <- RNAStringSet(drosi_rna_seqs)
+#drosi_rna_seqs  <- reverseComplement(drosi_dna_seqs)
+drosi_rna_seqs  <- RNAStringSet(drosi_dna_seqs)
+head(drosi_rna_seqs)
 ```
 
 ```{r}
-
+writeXStringSet(drosi_rna_seqs, file.path(params$fasta_folder, "drosophila_cds.fa"))
 ```
 

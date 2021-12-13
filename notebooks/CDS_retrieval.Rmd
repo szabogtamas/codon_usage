@@ -109,3 +109,16 @@ cdsBy(tx_set, "tx") %>%
   writeXStringSet(file.path(params$fasta_folder, "yeast_cds.fa"))
 ```
 
+```{r}
+frq_tab <- "../codon_freqs" %>%
+  dir(full.names=TRUE) %>%
+  setNames(., basename(.)) %>%
+  purrr::map_dfr(read.csv, .id="SPECIES") %>%
+  dplyr::rename(TRANSCRIPT = X) %>%
+  mutate(
+    SPECIES = gsub("_cds_.*", "", SPECIES)
+  )
+
+head(frq_tab)
+```
+

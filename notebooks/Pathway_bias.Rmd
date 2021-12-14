@@ -1,0 +1,40 @@
+---
+title: "`r params$report_title`"
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+    theme: united
+    code_folding: hide
+params:
+  report_title: "Pathways affected by codon biassed genes"
+  report_author: "Tamas Szabo"
+  report_time: !r format(Sys.Date(), format="%d/%m/%Y")
+  species: "human"
+  freq_folder: "../codon_freqs"
+---
+
+## Setup
+
+```{r message = FALSE, warning = FALSE}
+# Import tools to be used
+
+library(dplyr)
+library(GenomicFeatures)
+
+select <- dplyr::select
+filter <- dplyr::filter
+```
+
+```{r}
+frq_tab <- params$freq_folder %>%
+  dir(full.names=TRUE) %>%
+  setNames(., basename(.)) %>%
+  purrr::map_dfr(read.csv, .id="SPECIES") %>%
+  dplyr::rename(TRANSCRIPT = X) %>%
+  mutate(
+    SPECIES = gsub("_cds_.*", "", SPECIES)
+  )
+
+head(frq_tab)
+```

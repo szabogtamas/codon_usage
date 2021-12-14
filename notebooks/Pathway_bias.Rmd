@@ -29,6 +29,13 @@ filter <- dplyr::filter
 ```
 
 ```{r}
+# Mock object
+
+mydf <- data.frame(Entrez=c('1', '100', '1000', '100101467','100127206', '100128071'), group = c('A', 'A', 'A', 'B', 'B', 'B'))
+emptyRes <- compareCluster(Entrez~group, data=mydf, fun="enrichGO", 'org.Hs.eg.db')
+```
+
+```{r}
 hs_geneSet <- "Homo sapiens" %>%
   msigdbr(species=., category="C5", subcategory="BP") %>%
   .[,c('gs_name', 'entrez_gene')]

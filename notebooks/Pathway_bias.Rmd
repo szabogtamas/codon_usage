@@ -29,6 +29,12 @@ filter <- dplyr::filter
 ```
 
 ```{r}
+hs_geneSet <- "Homo sapiens" %>%
+  msigdbr(species=., category="C5", subcategory="BP") %>%
+  .[,c('gs_name', 'entrez_gene')]
+```
+
+```{r}
 frq_tab <- params$freq_folder %>%
   dir(full.names=TRUE) %>%
   setNames(., basename(.)) %>%

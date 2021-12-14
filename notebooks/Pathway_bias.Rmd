@@ -20,7 +20,9 @@ params:
 # Import tools to be used
 
 library(dplyr)
-library(GenomicFeatures)
+library(ggplot2)
+library(clusterProfiler)
+library(msigdbr)
 
 select <- dplyr::select
 filter <- dplyr::filter

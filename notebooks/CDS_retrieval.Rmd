@@ -56,10 +56,16 @@ tx_set <- TxDb.Hsapiens.UCSC.hg19.knownGene
 genome_seqs <- BSgenome.Hsapiens.UCSC.hg19
 
 cds_coll <- cdsBy(tx_set, "tx")
-id_map <- AnnotationDbi::select(tx_set, keys=names(cds_coll), columns="GENEID", keytype="TXID")
+id_map <- tx_set %>%
+  AnnotationDbi::select(keys=names(cds_coll), columns="GENEID", keytype="TXID") %>%
+  filter(!is.na(GENEID)) %>%
+  mutate(GENEID = paste(TXID, GENEID, sep="_")) %>%
+  {setNames(.$GENEID, .$TXID)}
 
 cds_coll %>%
+  {.[names(.) %in% names(id_map)]} %>%
   extractTranscriptSeqs(genome_seqs, .) %>%
+  setNames(., id_map[names(.)]) %>%
   RNAStringSet() %>%
   writeXStringSet(file.path(params$fasta_folder, "human_cds.fa"))
 ```

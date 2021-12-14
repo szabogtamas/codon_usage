@@ -76,8 +76,17 @@ cds_coll %>%
 tx_set <- TxDb.Mmusculus.UCSC.mm10.knownGene
 genome_seqs <- BSgenome.Mmusculus.UCSC.mm10
 
-cdsBy(tx_set, "tx") %>%
+cds_coll <- cdsBy(tx_set, "tx")
+id_map <- tx_set %>%
+  AnnotationDbi::select(keys=names(cds_coll), columns="GENEID", keytype="TXID") %>%
+  filter(!is.na(GENEID)) %>%
+  mutate(GENEID = paste(TXID, GENEID, sep="_")) %>%
+  {setNames(.$GENEID, .$TXID)}
+
+cds_coll %>%
+  {.[names(.) %in% names(id_map)]} %>%
   extractTranscriptSeqs(genome_seqs, .) %>%
+  setNames(., id_map[names(.)]) %>%
   RNAStringSet() %>%
   writeXStringSet(file.path(params$fasta_folder, "mouse_cds.fa"))
 ```
@@ -88,8 +97,17 @@ cdsBy(tx_set, "tx") %>%
 tx_set <- TxDb.Drerio.UCSC.danRer10.refGene
 genome_seqs <- BSgenome.Drerio.UCSC.danRer10
 
-cdsBy(tx_set, "tx") %>%
+cds_coll <- cdsBy(tx_set, "tx")
+id_map <- tx_set %>%
+  AnnotationDbi::select(keys=names(cds_coll), columns="GENEID", keytype="TXID") %>%
+  filter(!is.na(GENEID)) %>%
+  mutate(GENEID = paste(TXID, GENEID, sep="_")) %>%
+  {setNames(.$GENEID, .$TXID)}
+
+cds_coll %>%
+  {.[names(.) %in% names(id_map)]} %>%
   extractTranscriptSeqs(genome_seqs, .) %>%
+  setNames(., id_map[names(.)]) %>%
   RNAStringSet() %>%
   writeXStringSet(file.path(params$fasta_folder, "zebrafish_cds.fa"))
 ```
@@ -100,8 +118,17 @@ cdsBy(tx_set, "tx") %>%
 tx_set <- TxDb.Dmelanogaster.UCSC.dm6.ensGene
 genome_seqs <- BSgenome.Dmelanogaster.UCSC.dm6
 
-cdsBy(tx_set, "tx") %>%
+cds_coll <- cdsBy(tx_set, "tx")
+id_map <- tx_set %>%
+  AnnotationDbi::select(keys=names(cds_coll), columns="GENEID", keytype="TXID") %>%
+  filter(!is.na(GENEID)) %>%
+  mutate(GENEID = paste(TXID, GENEID, sep="_")) %>%
+  {setNames(.$GENEID, .$TXID)}
+
+cds_coll %>%
+  {.[names(.) %in% names(id_map)]} %>%
   extractTranscriptSeqs(genome_seqs, .) %>%
+  setNames(., id_map[names(.)]) %>%
   RNAStringSet() %>%
   writeXStringSet(file.path(params$fasta_folder, "drosophila_cds.fa"))
 ```
@@ -112,22 +139,17 @@ cdsBy(tx_set, "tx") %>%
 tx_set <- TxDb.Scerevisiae.UCSC.sacCer3.sgdGene
 genome_seqs <- BSgenome.Scerevisiae.UCSC.sacCer3
 
-cdsBy(tx_set, "tx") %>%
+cds_coll <- cdsBy(tx_set, "tx")
+id_map <- tx_set %>%
+  AnnotationDbi::select(keys=names(cds_coll), columns="GENEID", keytype="TXID") %>%
+  filter(!is.na(GENEID)) %>%
+  mutate(GENEID = paste(TXID, GENEID, sep="_")) %>%
+  {setNames(.$GENEID, .$TXID)}
+
+cds_coll %>%
+  {.[names(.) %in% names(id_map)]} %>%
   extractTranscriptSeqs(genome_seqs, .) %>%
+  setNames(., id_map[names(.)]) %>%
   RNAStringSet() %>%
   writeXStringSet(file.path(params$fasta_folder, "yeast_cds.fa"))
 ```
-
-```{r}
-frq_tab <- "../codon_freqs" %>%
-  dir(full.names=TRUE) %>%
-  setNames(., basename(.)) %>%
-  purrr::map_dfr(read.csv, .id="SPECIES") %>%
-  dplyr::rename(TRANSCRIPT = X) %>%
-  mutate(
-    SPECIES = gsub("_cds_.*", "", SPECIES)
-  )
-
-head(frq_tab)
-```
-

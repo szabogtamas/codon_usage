@@ -55,7 +55,10 @@ if(!dir.exists(params$fasta_folder)) dir.create(params$fasta_folder, recursive=T
 tx_set <- TxDb.Hsapiens.UCSC.hg19.knownGene
 genome_seqs <- BSgenome.Hsapiens.UCSC.hg19
 
-cdsBy(tx_set, "tx") %>%
+cds_coll <- cdsBy(tx_set, "tx")
+id_map <- AnnotationDbi::select(tx_set, keys=names(cds_coll), columns="GENEID", keytype="TXID")
+
+cds_coll %>%
   extractTranscriptSeqs(genome_seqs, .) %>%
   RNAStringSet() %>%
   writeXStringSet(file.path(params$fasta_folder, "human_cds.fa"))

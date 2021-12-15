@@ -27,7 +27,8 @@ RUN install2.r --error \
     ggsci \
     ggridges \
     pheatmap \
-    readxl
+    readxl \
+    msigdbr
 
 RUN R -e "BiocManager::install('EnsDb.Hsapiens.v86')"
 RUN R -e "BiocManager::install('EnsDb.Mmusculus.v79')"

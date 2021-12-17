@@ -1,0 +1,37 @@
+---
+title: "`r params$report_title`"
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+    theme: united
+    code_folding: hide
+params:
+  report_title: "Calculating codon bias scores"
+  report_author: "Tamas Szabo"
+  report_time: !r format(Sys.Date(), format="%d/%m/%Y")
+  codon_of_interest: "AGA"
+  codon_table: "../codon_table.csv"
+  freq_folder: "../codon_freqs"
+---
+
+## Setup
+
+```{r message = FALSE, warning = FALSE}
+# Import tools to be used
+
+library(dplyr)
+library(ggplot2)
+
+select <- dplyr::select
+filter <- dplyr::filter
+```
+
+```{r}
+# Codon table to map amino acids
+
+codon_tab <- parmas$codon_table %>%
+  mutate(
+    Codon = gsub("T", "U", Codon
+  )
+```

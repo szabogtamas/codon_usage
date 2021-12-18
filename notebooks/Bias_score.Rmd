@@ -34,4 +34,15 @@ codon_tab <- parmas$codon_table %>%
   mutate(
     Codon = gsub("T", "U", Codon
   )
+
+COI <- params$codon_of_interest
+COMPETITORS <- codon_tab %>%
+  group_by(Aa) %>%
+  mutate(
+    INTEREST = ifelse(COI %in% Codon)
+  ) %>%
+  filter(INTEREST & Codon != COI) %>%
+  .$Codon
+
+print(COMPETITORS)
 ```

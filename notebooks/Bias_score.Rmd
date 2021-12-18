@@ -46,3 +46,19 @@ COMPETITORS <- codon_tab %>%
 
 print(COMPETITORS)
 ```
+
+```{r}
+# Codon frequencies calculated before
+
+frq_tab <- params$freq_folder %>%
+  dir(full.names=TRUE) %>%
+  setNames(., basename(.)) %>%
+  purrr::map_dfr(read.csv, .id="SPECIES") %>%
+  dplyr::rename(TRANSCRIPT = X) %>%
+  mutate(
+    SPECIES = gsub("_cds_.*", "", SPECIES),
+    TRANSCRIPT = gsub(".*_", "", TRANSCRIPT)
+  )
+
+distinct(frq_tab, SPECIES, .keep_all=TRUE)
+```

@@ -62,3 +62,12 @@ frq_tab <- params$freq_folder %>%
 
 distinct(frq_tab, SPECIES, .keep_all=TRUE)
 ```
+
+```{r}
+# Calculate score for codon
+
+bias_tab <- frq_tab %>%
+  select(one_of(c(COI, COMPETITORS))
+
+head(bias_tab)
+```

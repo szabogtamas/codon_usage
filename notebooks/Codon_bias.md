@@ -81,7 +81,7 @@ for seq_record in SeqIO.parse("GRCh38_latest_rna.fna", "fasta"):
 ```
 
 ```python
-
+# https://www.ncbi.nlm.nih.gov/projects/CCDS/CcdsBrowse.cgi
 ```
 
 ```python

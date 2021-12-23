@@ -67,7 +67,12 @@ distinct(frq_tab, SPECIES, .keep_all=TRUE)
 # Calculate score for codon
 
 bias_tab <- frq_tab %>%
-  select(one_of(c(COI, COMPETITORS))
+  select(one_of(c(COI, COMPETITORS)) %>%
+  pivot_longer() %>%
+  mutate(
+    total = rowSums(across(where(is.numeric))),
+    SCORE = sym(COI) / total
+  )
 
 head(bias_tab)
 ```

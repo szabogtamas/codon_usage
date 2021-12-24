@@ -76,3 +76,11 @@ bias_tab <- frq_tab %>%
 
 head(bias_tab)
 ```
+
+```{r}
+# Show distribution of score
+
+bias_tab %>%
+  ggplot(aes(x=SCORE) %>%
+  geom_density()
+```

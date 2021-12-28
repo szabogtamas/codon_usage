@@ -68,11 +68,11 @@ distinct(frq_tab, SPECIES, .keep_all=TRUE)
 # Calculate score for codon
 
 bias_tab <- frq_tab %>%
-  select(one_of(c(COI, COMPETITORS)) %>%
-  pivot_longer() %>%
+  select(one_of(c(COI, COMPETITORS))) %>%
+  rename(BASE = sym(COI)) %>%
   mutate(
     total = rowSums(across(where(is.numeric))),
-    SCORE = sym(COI) / total
+    SCORE = BASE / total
   )
 
 head(bias_tab)
@@ -82,6 +82,6 @@ head(bias_tab)
 # Show distribution of score
 
 bias_tab %>%
-  ggplot(aes(x=SCORE) %>%
+  ggplot(aes(x=SCORE)) +
   geom_density()
 ```

@@ -30,16 +30,17 @@ filter <- dplyr::filter
 ```{r}
 # Codon table to map amino acids
 
-codon_tab <- parmas$codon_table %>%
+codon_tab <- params$codon_table %>%
+  read.csv() %>%
   mutate(
-    Codon = gsub("T", "U", Codon
+    Codon = gsub("T", "U", Codon)
   )
 
 COI <- params$codon_of_interest
 COMPETITORS <- codon_tab %>%
   group_by(Aa) %>%
   mutate(
-    INTEREST = ifelse(COI %in% Codon)
+    INTEREST = COI %in% Codon,
   ) %>%
   filter(INTEREST & Codon != COI) %>%
   .$Codon

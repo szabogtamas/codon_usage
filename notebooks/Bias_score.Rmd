@@ -93,7 +93,7 @@ head(bias_tab)
 bias_tab %>%
   ggplot(aes(x=SCORE, fill=SPECIES)) +
   geom_density() +
-  scale_fill_npg()
+  scale_fill_npg(alpha=0.6)
 ```
 
 ## Top biassed proteins

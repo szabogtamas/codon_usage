@@ -75,12 +75,12 @@ distinct(frq_tab, SPECIES, .keep_all=TRUE)
 bias_tab <- frq_tab %>%
   select(one_of(c('SPECIES', 'TRANSCRIPT', COI, COMPETITORS))) %>%
   group_by(SPECIES, TRANSCRIPT) %>%
-  summarise_if(is.numeric, mean, na.rm = TRUE) %>%
+  summarise_if(is.numeric, mean, na.rm=TRUE) %>%
   ungroup() %>%
   rename(BASE = sym(COI)) %>%
   mutate(
     total = rowSums(across(where(is.numeric))),
-    SCORE = ((BASE / total) - XP_COMPETE) / XP_COMPETE
+    SCORE = ((BASE / total) - XP_COMPETE) * XP_COMPETE
   )
 
 head(bias_tab)
@@ -97,7 +97,7 @@ bias_tab %>%
 ## Top biassed proteins
 
 ```{r}
-TOP_N <- 15
+TOP_N <- 150
 
 top_tags <- bias_tab %>%
   arrange(desc(SCORE)) %>%

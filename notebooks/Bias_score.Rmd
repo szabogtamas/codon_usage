@@ -23,6 +23,7 @@ params:
 library(dplyr)
 library(purrr)
 library(ggplot2)
+library(ggsci)
 
 select <- dplyr::select
 filter <- dplyr::filter
@@ -90,8 +91,9 @@ head(bias_tab)
 # Show distribution of score
 
 bias_tab %>%
-  ggplot(aes(x=SCORE)) +
-  geom_density()
+  ggplot(aes(x=SCORE, fill=SPECIES)) +
+  geom_density() +
+  scale_fill_npg()
 ```
 
 ## Top biassed proteins

@@ -45,6 +45,8 @@ COMPETITORS <- codon_tab %>%
   filter(INTEREST & Codon != COI) %>%
   .$Codon
 
+XP_COMPETE <- 1 / (length(COMPETITORS) + 1)
+
 print(COMPETITORS)
 ```
 
@@ -64,15 +66,20 @@ frq_tab <- params$freq_folder %>%
 distinct(frq_tab, SPECIES, .keep_all=TRUE)
 ```
 
+## Bias calculation
+
 ```{r}
 # Calculate score for codon
 
 bias_tab <- frq_tab %>%
-  select(one_of(c(COI, COMPETITORS))) %>%
+  select(one_of(c('SPECIES', 'TRANSCRIPT', COI, COMPETITORS))) %>%
+  group_by(SPECIES, TRANSCRIPT) %>%
+  summarise_if(is.numeric, mean, na.rm = TRUE) %>%
+  ungroup() %>%
   rename(BASE = sym(COI)) %>%
   mutate(
     total = rowSums(across(where(is.numeric))),
-    SCORE = BASE / total
+    SCORE = (BASE / total) - XP_COMPETE
   )
 
 head(bias_tab)
@@ -85,3 +92,5 @@ bias_tab %>%
   ggplot(aes(x=SCORE)) +
   geom_density()
 ```
+
+

@@ -102,6 +102,21 @@ bias_tab %>%
   labs(x="Bias score", title=paste("Codon usage bias of", COI))
 ```
 
+```{r}
+# Show distribution of score
+
+bias_tab %>%
+  ggplot(aes(x=SCORE, color=SPECIES)) +
+  geom_density(fill=NA) +
+  scale_color_npg() +
+  theme_bw() +
+  theme(
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank()
+  ) +
+  labs(x="Bias score", title=paste("Codon usage bias of", COI))
+```
+
 ## Top biassed proteins
 
 ```{r}

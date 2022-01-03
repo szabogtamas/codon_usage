@@ -21,6 +21,7 @@ params:
 # Import tools to be used
 
 library(dplyr)
+library(purrr)
 library(ggplot2)
 
 select <- dplyr::select
@@ -93,4 +94,17 @@ bias_tab %>%
   geom_density()
 ```
 
+## Top biassed proteins
 
+```{r}
+TOP_N <- 15
+
+top_tags <- bias_tab %>%
+  arrange(SCORE, decreasing=TRUE) %>%
+  select(SPECIES, TRANSCRIPT, SCORE) %>%
+  group_split(SPECIES) %>%
+  map(head, TOP_N) %>%
+  bind_rows()
+
+top_tags
+```

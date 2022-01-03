@@ -80,7 +80,7 @@ bias_tab <- frq_tab %>%
   rename(BASE = sym(COI)) %>%
   mutate(
     total = rowSums(across(where(is.numeric))),
-    SCORE = ((BASE / total) - XP_COMPETE) /XP_COMPETE
+    SCORE = ((BASE / total) - XP_COMPETE) / XP_COMPETE
   )
 
 head(bias_tab)
@@ -100,7 +100,7 @@ bias_tab %>%
 TOP_N <- 15
 
 top_tags <- bias_tab %>%
-  arrange(SCORE, decreasing=TRUE) %>%
+  arrange(desc(SCORE)) %>%
   select(SPECIES, TRANSCRIPT, SCORE) %>%
   group_split(SPECIES) %>%
   map(head, TOP_N) %>%

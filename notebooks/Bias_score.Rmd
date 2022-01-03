@@ -24,6 +24,8 @@ library(dplyr)
 library(purrr)
 library(ggplot2)
 library(ggsci)
+library(clusterProfiler)
+library(msigdbr)
 
 select <- dplyr::select
 filter <- dplyr::filter
@@ -130,4 +132,19 @@ top_tags <- bias_tab %>%
   bind_rows()
 
 top_tags
+```
+
+## Biassed pathways
+
+```{r}
+# Retrieve MSigDB collections for model species
+
+msig_list <- list(
+  human = "Homo sapiens",
+  mouse = "Mus musculus",
+  zebrafish = "Danio rerio",
+  drosophils = "Drosophila melanogaster",
+  yeast = "Saccharomyces cerevisiae"
+) %>%
+  lapply(function(x) msigdbr(species=x, category="C5", subcategory="BP")[,c('gs_name', 'entrez_gene')])
 ```

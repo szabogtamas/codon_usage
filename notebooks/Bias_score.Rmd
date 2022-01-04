@@ -26,6 +26,9 @@ library(ggplot2)
 library(ggsci)
 library(clusterProfiler)
 library(msigdbr)
+library(AnnotationDbi)
+library(org.Sc.sgd.db)
+library(org.Dm.eg.db)
 
 select <- dplyr::select
 filter <- dplyr::filter
@@ -69,6 +72,39 @@ frq_tab <- params$freq_folder %>%
 
 distinct(frq_tab, SPECIES, .keep_all=TRUE)
 ```
+
+```{r}
+# Fix gene IDs for yeast and drosi
+
+sc_sub <- frq_tab %>%
+  filter(SPECIES == "yeast")
+
+id_map <- AnnotationDbi::select(org.Sc.sgd.db, keys=sc_sub$TRANSCRIPT, columns="ENTREZID", keytype="ENSEMBL") %>%
+  filter(!is.na(ENTREZID)) %>%
+  {setNames(.$ENTREZID, .$ENSEMBL)}
+
+sc_sub <- sc_sub %>%
+  mutate(TRANSCRIPT = id_map[TRANSCRIPT]) %>%
+  filter(!is.na(TRANSCRIPT))
+
+dr_sub <- frq_tab %>%
+  filter(SPECIES == "drosophila")
+
+id_map <- AnnotationDbi::select(org.Dm.eg.db, keys=dr_sub$TRANSCRIPT, columns="ENTREZID", keytype="FLYBASE") %>%
+  filter(!is.na(ENTREZID)) %>%
+  {setNames(.$ENTREZID, .$FLYBASE)}
+
+dr_sub <- dr_sub %>%
+  mutate(TRANSCRIPT = id_map[TRANSCRIPT]) %>%
+  filter(!is.na(TRANSCRIPT))
+
+frq_tab <- frq_tab %>%
+  filter(!SPECIES %in% c("drosophila", "yeast")) %>%
+  bind_rows(dr_sub, sc_sub)
+
+distinct(frq_tab, SPECIES, .keep_all=TRUE)
+```
+
 
 ## Bias calculation
 

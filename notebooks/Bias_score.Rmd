@@ -111,12 +111,17 @@ distinct(frq_tab, SPECIES, .keep_all=TRUE)
 ```{r}
 # Calculate score for codon
 
+coi_setter <- function(x) {
+  x$BASE <- x[[COI]]
+  x
+}
+
 bias_tab <- frq_tab %>%
   select(one_of(c('SPECIES', 'TRANSCRIPT', COI, COMPETITORS))) %>%
   group_by(SPECIES, TRANSCRIPT) %>%
   summarise_if(is.numeric, mean, na.rm=TRUE) %>%
   ungroup() %>%
-  rename(BASE = sym(COI)) %>%
+  coi_setter %>%
   mutate(
     total = rowSums(across(where(is.numeric))),
     SCORE = ((BASE / total) - XP_COMPETE) * XP_COMPETE

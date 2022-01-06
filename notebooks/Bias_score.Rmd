@@ -184,8 +184,20 @@ msig_list <- list(
   human = "Homo sapiens",
   mouse = "Mus musculus",
   zebrafish = "Danio rerio",
-  drosophils = "Drosophila melanogaster",
+  drosophila = "Drosophila melanogaster",
   yeast = "Saccharomyces cerevisiae"
 ) %>%
   lapply(function(x) msigdbr(species=x, category="C5", subcategory="BP")[,c('gs_name', 'entrez_gene')])
 ```
+
+### ORA
+
+```{r}
+enrichment <- msig_list %>%
+  purrr::imap(~clusterProfiler::enricher(
+    top_tags[top_tags$SPECIES == .y, "TRANSCRIPT"],
+    TERM2GENE=.x
+    pAdjustMethod="none")
+  )
+```
+

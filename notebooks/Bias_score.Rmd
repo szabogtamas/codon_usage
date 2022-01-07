@@ -196,8 +196,19 @@ msig_list <- list(
 enrichment <- msig_list %>%
   purrr::imap(~clusterProfiler::enricher(
     top_tags[top_tags$SPECIES == .y, "TRANSCRIPT"],
-    TERM2GENE=.x
+    TERM2GENE=.x,
     pAdjustMethod="none")
   )
 ```
+
+### GSEA
+
+```{r}
+enriched_sets <- msig_list %>%
+  purrr::imap(~clusterProfiler::GSEA(
+    bias_tab %>% filter(SPECIES == .y & !is.na(SCORE)) %>% arrange(desc(SCORE)) %>% {setNames(.$SCORE, .$TRANSCRIPT)},
+    TERM2GENE=.x, pAdjustMethod="none")
+  )
+```
+
 

@@ -69,7 +69,7 @@ cft.reset_index().to_csv(freq_dir + "/test_freqs.csv", index=False)
 ```python
 for fn in os.listdir(genome_dir):
     freq_tab = create_codonfeq_table(genome_dir + "/" + fn)
-    freq_tab.to_csv(freq_dir + os.path.splitext(fn)[0] +"_freq.csv")
+    freq_tab.to_csv(freq_dir + "/" + os.path.splitext(fn)[0] +"_freq.csv")
 ```
 
 ```python

@@ -11,8 +11,8 @@ params:
   report_author: "Tamas Szabo"
   report_time: !r format(Sys.Date(), format="%d/%m/%Y")
   codon_of_interest: "AGA"
-  codon_table: "../codon_table.csv"
-  freq_folder: "../codon_freqs"
+  codon_table: "../stock_data/codon_table.csv"
+  freq_folder: "../stock_data/codon_freqs"
 ---
 
 ## Setup
@@ -163,7 +163,7 @@ bias_tab %>%
 ## Top biassed proteins
 
 ```{r}
-TOP_N <- 150
+TOP_N <- 500
 
 top_tags <- bias_tab %>%
   arrange(desc(SCORE)) %>%

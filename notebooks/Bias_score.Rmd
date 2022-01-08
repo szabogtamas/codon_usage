@@ -211,4 +211,27 @@ enriched_sets <- msig_list %>%
   )
 ```
 
+```{r}
+plot_data <- enriched_sets %>%
+  map_dfr(function(x) x@result, .id="SPECIES") %>%
+  arrange(desc(abs(NES))) %>%
+  mutate(
+    n_genes = length(strsplit(core_enrichment, "/")),
+    Description = gsub("GO_", "", Description),
+    Description = gsub("_", " ", Description)
+  ) %>%
+  group_by(SPECIES) %>%
+  mutate(
+    pw_rank = 50 - seq(0, n()-1)
+  ) %>%
+  ungroup() %>%
+  group_by(ID) %>%
+  mutate(
+    pw_sum_rank = sum(pw_rank, na.rm=TRUE)
+  ) %>%
+  ungroup() %>%
+  select(Description, SPECIES, setSize, NES, p.adjust, pw_rank, pw_sum_rank) %>%
+  arrange(desc(pw_sum_rank))
 
+head(plot_data)
+```

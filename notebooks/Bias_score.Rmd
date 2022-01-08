@@ -235,3 +235,28 @@ plot_data <- enriched_sets %>%
 
 head(plot_data)
 ```
+
+```{r}
+top_pathways <- plot_data %>%
+  .$Description %>%
+  unique() %>%
+  head(15)
+
+plot_data %>%
+  filter(Description %in% top_pathways) %>%
+  mutate(
+    logPadj = -log10(p.adjust),
+    Description = factor(Description, levels=rev(top_pathways)),
+    SPECIES = factor(SPECIES, levels=names(msig_list))
+  ) %>%
+  ggplot(aes(x=SPECIES, y=Description, size=logPadj, color=NES)) +
+  geom_point() +
+  scale_color_gradientn(
+    colors=rev(c('#173beb', '#4dbbd5ff', '#bee7f7', 'grey', 'white', 'grey', '#f7b09c', '#e64b35ff', '#ff0000')),
+    breaks=c(-3, -2, -2, -1, 0, 1, 2, 2, 3), limits=c(-3.5, 3.5), oob = scales::squish
+  ) +
+  theme(
+    axis.text.x=element_text(angle=30, hjust=1),
+    axis.text.y=element_text(size=8)
+  )
+```

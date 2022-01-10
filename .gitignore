@@ -1,6 +1,7 @@
 # Input data
 data/
 stock_data/fasta_transcriptomes/
+outputs/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

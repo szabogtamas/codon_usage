@@ -17,3 +17,8 @@ docker run --rm   -p 127.0.0.1:8989:8989 -p 127.0.0.1:8787:8787 -e USERID=$UID -
 An RStudio instance will be available at http://localhost:8787/ for your convenience.
 The user name is rstudio and the password is what you typed instead of "SecurePassword"
 above.
+
+Some example figures can be seen in the [example_outputs](example_outputs) folder.
+
+Project is under development. Some alternative approaches are being tested in the
+dev branch.

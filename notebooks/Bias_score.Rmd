@@ -159,21 +159,6 @@ write.csv(top_tags, tabfile, row.names=FALSE)
 ```{r}
 # Show distribution of score
 
-bias_tab %>%
-  ggplot(aes(x=SCORE, fill=SPECIES)) +
-  geom_density() +
-  scale_fill_npg(alpha=0.6) +
-  theme_bw() +
-  theme(
-    panel.grid.major = element_blank(),
-    panel.grid.minor = element_blank()
-  ) +
-  labs(x="Bias score", title=paste("Codon usage bias of", COI))
-```
-
-```{r}
-# Show improved distribution plot
-
 p <- bias_tab %>%
   mutate(
     SPECIES = factor(SPECIES, levels=c("human", "mouse", "zebrafish", "drosophila", "yeast"))

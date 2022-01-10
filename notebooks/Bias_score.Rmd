@@ -227,6 +227,32 @@ enrichment <- msig_list %>%
   )
 ```
 
+```{r}
+plot_data <- enrichment %>%
+  map_dfr(function(x) x@result, .id="SPECIES") %>%
+  mutate(
+    Description = gsub("GO_", "", Description),
+    Description = gsub("_", " ", Description),
+    setSize = strsplit(GeneRatio, "/"),
+    setSize = map(setSize, function(x) x[[2]])
+  ) %>%
+  unnest(setSize) %>%
+  arrange(p.adjust) %>%
+  group_by(SPECIES) %>%
+  mutate(
+    pw_rank = 50 - seq(0, n()-1)
+  ) %>%
+  ungroup() %>%
+  group_by(ID) %>%
+  mutate(
+    pw_sum_rank = sum(pw_rank, na.rm=TRUE)
+  ) %>%
+  ungroup() %>%
+  select(Description, SPECIES, Count, setSize, pvalue, p.adjust, pw_rank, pw_sum_rank) %>%
+  arrange(desc(pw_sum_rank))
+
+head(plot_data)
+```
 
 ### GSEA
 

@@ -35,6 +35,15 @@ library(org.Dm.eg.db)
 
 select <- dplyr::select
 filter <- dplyr::filter
+
+if (params$codon_in_prefix) {
+  EXPORT_PREFIX <- paste(params$output_prefix, params$codon_of_interest, sep="")
+} else {
+  EXPORT_PREFIX <- params$output_prefix
+}
+
+export_dir <- dirname(paste(EXPORT_PREFIX, "x.csv", sep="_"))
+if (!dir.exists(export_dir)) dir.create(export_dir)
 ```
 
 ```{r}
@@ -144,14 +153,7 @@ top_tags <- bias_tab %>%
   group_split() %>%
   map_dfr(head, params$top_n)
 
-if (codon_in_prefix) {
-  EXPORT_PREFIX <- paste(params$output_prefix, params$codon_of_interest, sep="")
-} else {
-  EXPORT_PREFIX <- params$output_prefix
-}
-tabfile <- paste(EXPORT_PREFIX, "toptags.csv", sep="_")
-if (!dir.exists(dirname(tabfile))) dir.create(dirname(tabfile))
-write.csv(top_tags, tabfile, row.names=FALSE)
+write.csv(top_tags, paste(EXPORT_PREFIX, "toptags.csv", sep="_"), row.names=FALSE)
 ```
 
 ### Score distribution

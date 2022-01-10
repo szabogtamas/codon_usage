@@ -10,7 +10,6 @@ params:
   report_title: "Parsing CDS sequences from a genome"
   report_author: "Tamas Szabo"
   report_time: !r format(Sys.Date(), format="%d/%m/%Y")
-  species: "human"
   fasta_folder: "../fasta_transcriptomes"
 ---
 

@@ -254,6 +254,36 @@ plot_data <- enrichment %>%
 head(plot_data)
 ```
 
+```{r}
+top_pathways <- plot_data %>%
+  .$Description %>%
+  unique() %>%
+  head(15)
+
+p <- plot_data %>%
+  filter(Description %in% top_pathways) %>%
+  mutate(
+    logPadj = -log10(p.adjust),
+    Description = factor(Description, levels=rev(top_pathways)),
+    SPECIES = factor(SPECIES, levels=names(msig_list))
+  ) %>%
+  ggplot(aes(x=SPECIES, y=Description, size=logPadj, color=SPECIES)) +
+  geom_point() +
+  scale_color_npg() +
+  theme_bw() +
+  theme(
+    axis.text.x=element_text(angle=30, hjust=1),
+    axis.text.y=element_text(size=8)
+  ) +
+  labs(
+    x = "", y = "", title = paste("Top biassed pathways for codon", params$codon_of_interest)
+  )
+
+ggsave(paste(params$output_prefix, "ora_dotplot.pdf", sep="_"), p, width=9, height=6)
+
+p
+```
+
 ### GSEA
 
 ```{r}

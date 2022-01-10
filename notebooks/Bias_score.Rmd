@@ -11,8 +11,9 @@ params:
   report_author: "Tamas Szabo"
   report_time: !r format(Sys.Date(), format="%d/%m/%Y")
   codon_of_interest: "AGA"
-  output_prefix: "../example_outputs/AGA"
-  top_n: 500
+  output_prefix: "../example_outputs/"
+  codon_in_prefix: true
+  top_n: 250
   codon_table: "../stock_data/codon_table.csv"
   freq_folder: "../stock_data/codon_freqs"
 ---
@@ -143,7 +144,12 @@ top_tags <- bias_tab %>%
   group_split() %>%
   map_dfr(head, params$top_n)
 
-tabfile <- paste(params$output_prefix, "toptags.csv", sep="_")
+if (codon_in_prefix) {
+  EXPORT_PREFIX <- paste(params$output_prefix, params$codon_of_interest, sep="")
+} else {
+  EXPORT_PREFIX <- params$output_prefix
+}
+tabfile <- paste(EXPORT_PREFIX, "toptags.csv", sep="_")
 if (!dir.exists(dirname(tabfile))) dir.create(dirname(tabfile))
 write.csv(top_tags, tabfile, row.names=FALSE)
 ```
@@ -182,7 +188,7 @@ p <- bias_tab %>%
   ) +
   labs(x="Bias score", title=paste("Codon usage bias of", COI))
 
-ggsave(paste(params$output_prefix, "score_distribution.pdf", sep="_"), p, width=4, height=3)
+ggsave(paste(EXPORT_PREFIX, "score_distribution.pdf", sep="_"), p, width=4, height=3)
 
 p
 ```
@@ -279,7 +285,7 @@ p <- plot_data %>%
     x = "", y = "", title = paste("Top biassed pathways for codon", params$codon_of_interest)
   )
 
-ggsave(paste(params$output_prefix, "ora_dotplot.pdf", sep="_"), p, width=9, height=6)
+ggsave(paste(EXPORT_PREFIX, "ora_dotplot.pdf", sep="_"), p, width=9, height=6)
 
 p
 ```
@@ -348,7 +354,7 @@ p <- plot_data %>%
     x = "", y = "", title = paste("Top biassed pathways for codon", params$codon_of_interest)
   )
 
-ggsave(paste(params$output_prefix, "gsea_dotplot.pdf", sep="_"), p, width=9, height=6)
+ggsave(paste(EXPORT_PREFIX, "gsea_dotplot.pdf", sep="_"), p, width=9, height=6)
 
 p
 ```

@@ -12,7 +12,7 @@ params:
   report_time: !r format(Sys.Date(), format="%d/%m/%Y")
   codon_of_interest: "AGA"
   output_prefix: "../example_outputs/AGA"
-  top_n: 150
+  top_n: 500
   codon_table: "../stock_data/codon_table.csv"
   freq_folder: "../stock_data/codon_freqs"
 ---
@@ -205,13 +205,28 @@ msig_list <- list(
 ### ORA
 
 ```{r}
+top_tags <- bias_tab %>%
+  arrange(desc(SCORE)) %>%
+  select(SPECIES, GENEID=TRANSCRIPT, SCORE) %>%
+  group_by(SPECIES) %>%
+  group_split() %>%
+  map_dfr(function(x) {
+    sp_l <- unique(x$SPECIES)
+    x %>%
+      filter(GENEID %in% msig_list[[sp_l]]$entrez_gene) %>%
+      head(params$top_n)
+  })
+```
+
+```{r}
 enrichment <- msig_list %>%
   purrr::imap(~clusterProfiler::enricher(
-    top_tags[top_tags$SPECIES == .y, "TRANSCRIPT"],
+    top_tags[top_tags$SPECIES == .y,]$GENEID,
     TERM2GENE=.x,
     pAdjustMethod="none")
   )
 ```
+
 
 ### GSEA
 

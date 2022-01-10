@@ -297,12 +297,13 @@ enriched_sets <- msig_list %>%
 ```{r}
 plot_data <- enriched_sets %>%
   map_dfr(function(x) x@result, .id="SPECIES") %>%
-  arrange(desc(abs(NES))) %>%
   mutate(
-    n_genes = length(strsplit(core_enrichment, "/")),
     Description = gsub("GO_", "", Description),
-    Description = gsub("_", " ", Description)
+    Description = gsub("_", " ", Description),
+    Count = strsplit(core_enrichment, "/"),
+    Count = map(Count, length)
   ) %>%
+  arrange(desc(abs(NES))) %>%
   group_by(SPECIES) %>%
   mutate(
     pw_rank = 50 - seq(0, n()-1)
@@ -313,7 +314,7 @@ plot_data <- enriched_sets %>%
     pw_sum_rank = sum(pw_rank, na.rm=TRUE)
   ) %>%
   ungroup() %>%
-  select(Description, SPECIES, setSize, NES, p.adjust, pw_rank, pw_sum_rank) %>%
+  select(Description, SPECIES, Count, setSize, NES, p.adjust, pw_rank, pw_sum_rank) %>%
   arrange(desc(pw_sum_rank))
 
 head(plot_data)
@@ -325,7 +326,7 @@ top_pathways <- plot_data %>%
   unique() %>%
   head(15)
 
-plot_data %>%
+p <- plot_data %>%
   filter(Description %in% top_pathways) %>%
   mutate(
     logPadj = -log10(p.adjust),
@@ -338,8 +339,16 @@ plot_data %>%
     colors=rev(c('#173beb', '#4dbbd5ff', '#bee7f7', 'grey', 'white', 'grey', '#f7b09c', '#e64b35ff', '#ff0000')),
     breaks=c(-3, -2, -2, -1, 0, 1, 2, 2, 3), limits=c(-3.5, 3.5), oob = scales::squish
   ) +
+  theme_bw() +
   theme(
     axis.text.x=element_text(angle=30, hjust=1),
     axis.text.y=element_text(size=8)
+  ) +
+  labs(
+    x = "", y = "", title = paste("Top biassed pathways for codon", params$codon_of_interest)
   )
+
+ggsave(paste(params$output_prefix, "gsea_dotplot.pdf", sep="_"), p, width=9, height=6)
+
+p
 ```

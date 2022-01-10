@@ -66,10 +66,10 @@ frq_tab <- params$freq_folder %>%
   dir(full.names=TRUE) %>%
   setNames(., basename(.)) %>%
   purrr::map_dfr(read.csv, .id="SPECIES") %>%
-  dplyr::rename(TRANSCRIPT = X) %>%
+  dplyr::rename(GENEID = X) %>%
   mutate(
     SPECIES = gsub("_cds_.*", "", SPECIES),
-    TRANSCRIPT = gsub(".*_", "", TRANSCRIPT)
+    GENEID = gsub(".*_", "", GENEID)
   )
 
 distinct(frq_tab, SPECIES, .keep_all=TRUE)
@@ -81,24 +81,24 @@ distinct(frq_tab, SPECIES, .keep_all=TRUE)
 sc_sub <- frq_tab %>%
   filter(SPECIES == "yeast")
 
-id_map <- AnnotationDbi::select(org.Sc.sgd.db, keys=sc_sub$TRANSCRIPT, columns="ENTREZID", keytype="ENSEMBL") %>%
+id_map <- AnnotationDbi::select(org.Sc.sgd.db, keys=sc_sub$GENEID, columns="ENTREZID", keytype="ENSEMBL") %>%
   filter(!is.na(ENTREZID)) %>%
   {setNames(.$ENTREZID, .$ENSEMBL)}
 
 sc_sub <- sc_sub %>%
-  mutate(TRANSCRIPT = id_map[TRANSCRIPT]) %>%
-  filter(!is.na(TRANSCRIPT))
+  mutate(GENEID = id_map[GENEID]) %>%
+  filter(!is.na(GENEID))
 
 dr_sub <- frq_tab %>%
   filter(SPECIES == "drosophila")
 
-id_map <- AnnotationDbi::select(org.Dm.eg.db, keys=dr_sub$TRANSCRIPT, columns="ENTREZID", keytype="FLYBASE") %>%
+id_map <- AnnotationDbi::select(org.Dm.eg.db, keys=dr_sub$GENEID, columns="ENTREZID", keytype="FLYBASE") %>%
   filter(!is.na(ENTREZID)) %>%
   {setNames(.$ENTREZID, .$FLYBASE)}
 
 dr_sub <- dr_sub %>%
-  mutate(TRANSCRIPT = id_map[TRANSCRIPT]) %>%
-  filter(!is.na(TRANSCRIPT))
+  mutate(GENEID = id_map[GENEID]) %>%
+  filter(!is.na(GENEID))
 
 frq_tab <- frq_tab %>%
   filter(!SPECIES %in% c("drosophila", "yeast")) %>%
@@ -118,8 +118,8 @@ coi_setter <- function(x) {
 }
 
 bias_tab <- frq_tab %>%
-  select(one_of(c('SPECIES', 'TRANSCRIPT', COI, COMPETITORS))) %>%
-  group_by(SPECIES, TRANSCRIPT) %>%
+  select(one_of(c('SPECIES', 'GENEID', COI, COMPETITORS))) %>%
+  group_by(SPECIES, GENEID) %>%
   summarise_if(is.numeric, mean, na.rm=TRUE) %>%
   ungroup() %>%
   coi_setter %>%
@@ -138,7 +138,7 @@ head(bias_tab)
 ```{r}
 top_tags <- bias_tab %>%
   arrange(desc(SCORE)) %>%
-  select(SPECIES, GENEID=TRANSCRIPT, SCORE) %>%
+  select(SPECIES, GENEID, SCORE) %>%
   group_by(SPECIES) %>%
   group_split() %>%
   map_dfr(head, params$top_n)
@@ -207,7 +207,7 @@ msig_list <- list(
 ```{r}
 top_tags <- bias_tab %>%
   arrange(desc(SCORE)) %>%
-  select(SPECIES, GENEID=TRANSCRIPT, SCORE) %>%
+  select(SPECIES, GENEID, SCORE) %>%
   group_by(SPECIES) %>%
   group_split() %>%
   map_dfr(function(x) {
@@ -289,7 +289,7 @@ p
 ```{r}
 enriched_sets <- msig_list %>%
   purrr::imap(~clusterProfiler::GSEA(
-    bias_tab %>% filter(SPECIES == .y & !is.na(SCORE)) %>% arrange(desc(SCORE)) %>% {setNames(.$SCORE, .$TRANSCRIPT)},
+    bias_tab %>% filter(SPECIES == .y & !is.na(SCORE)) %>% arrange(desc(SCORE)) %>% {setNames(.$SCORE, .$GENEID)},
     TERM2GENE=.x, pAdjustMethod="none")
   )
 ```

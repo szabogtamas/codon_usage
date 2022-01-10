@@ -12,6 +12,7 @@ params:
   report_time: !r format(Sys.Date(), format="%d/%m/%Y")
   codon_of_interest: "AGA"
   output_prefix: "../example_outputs/AGA"
+  top_n: 150
   codon_table: "../stock_data/codon_table.csv"
   freq_folder: "../stock_data/codon_freqs"
 ---
@@ -106,7 +107,6 @@ frq_tab <- frq_tab %>%
 distinct(frq_tab, SPECIES, .keep_all=TRUE)
 ```
 
-
 ## Bias calculation
 
 ```{r}
@@ -164,14 +164,12 @@ bias_tab %>%
 ## Top biassed genes
 
 ```{r}
-TOP_N <- 500
-
 top_tags <- bias_tab %>%
-  group_by(SPECIES) %>%
   arrange(desc(SCORE)) %>%
-  select(SPECIES, TRANSCRIPT, SCORE) %>%
-  map(head, TOP_N) %>%
-  bind_rows()
+  select(SPECIES, GENEID=TRANSCRIPT, SCORE) %>%
+  group_by(SPECIES) %>%
+  group_split() %>%
+  map_dfr(head, params$top_n)
 
 tabfile <- paste(params$output_prefix, "toptags.csv", sep="_")
 if (!dir.exists(dirname(tabfile))) dir.create(dirname(tabfile))

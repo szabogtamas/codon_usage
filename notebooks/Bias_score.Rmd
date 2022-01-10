@@ -11,6 +11,7 @@ params:
   report_author: "Tamas Szabo"
   report_time: !r format(Sys.Date(), format="%d/%m/%Y")
   codon_of_interest: "AGA"
+  output_prefix: "../example_outputs/AGA"
   codon_table: "../stock_data/codon_table.csv"
   freq_folder: "../stock_data/codon_freqs"
 ---
@@ -160,19 +161,21 @@ bias_tab %>%
   labs(x="Bias score", title=paste("Codon usage bias of", COI))
 ```
 
-## Top biassed proteins
+## Top biassed genes
 
 ```{r}
 TOP_N <- 500
 
 top_tags <- bias_tab %>%
+  group_by(SPECIES) %>%
   arrange(desc(SCORE)) %>%
   select(SPECIES, TRANSCRIPT, SCORE) %>%
-  group_split(SPECIES) %>%
   map(head, TOP_N) %>%
   bind_rows()
 
-top_tags
+tabfile <- paste(params$output_prefix, "toptags.csv", sep="_")
+if (!dir.exists(dirname(tabfile))) dir.create(dirname(tabfile))
+write.csv(top_tags, tabfile, row.names=FALSE)
 ```
 
 ## Biassed pathways

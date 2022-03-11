@@ -26,7 +26,6 @@ RUN install2.r --error \
     RColorBrewer \
     ggsci \
     ggridges \
-    pheatmap \
     readxl \
     msigdbr
 

@@ -27,6 +27,7 @@ RUN install2.r --error \
     ggsci \
     ggridges \
     readxl \
+    openxlsx \
     msigdbr
 
 RUN R -e "BiocManager::install('EnsDb.Hsapiens.v86')"

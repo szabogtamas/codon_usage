@@ -329,7 +329,7 @@ p <- plot_data %>%
   ggplot(aes(x=SPECIES, y=Description, size=logPadj, color=NES)) +
   geom_point() +
   scale_color_gradientn(
-    colors=rev(c('#173beb', '#4dbbd5ff', '#bee7f7', 'grey', 'white', 'grey', '#f7b09c', '#e64b35ff', '#ff0000')),
+    colors=c('#173beb', '#4dbbd5ff', '#bee7f7', 'grey', 'white', 'grey', '#f7b09c', '#e64b35ff', '#ff0000'),
     breaks=c(-3, -2, -2, -1, 0, 1, 2, 2, 3), limits=c(-3.5, 3.5), oob = scales::squish
   ) +
   theme_bw() +

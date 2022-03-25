@@ -8,7 +8,7 @@ import os, itertools
 def calc_codon_freq_of_cds(
     seq,
     proto_d={"".join(x): 0 for x in itertools.product("CUAG", repeat=3)},
-    complement=True
+    complement=False
 ):
     c = 0
     d = proto_d.copy()
